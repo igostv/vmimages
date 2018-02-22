@@ -1,10 +1,4 @@
 choco install wget -y
 choco install curl -y
 
-choco install git /NoCredentialManager /NoShellIntegration /GitAndUnixToolsOnPath -y
-
-refreshenv.bat
-
-mkdir -p ones/%V8VERSION%
-
-sh.exe onesdownloader.sh %V8VERSION% ones/%V8VERSION% 
+choco install git -params "/NoCredentialManager /NoShellIntegration /GitAndUnixToolsOnPath" -y

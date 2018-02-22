@@ -8,8 +8,14 @@
         "boot_wait": "2m",
         "ssh_username": "packer",
         "ssh_password": "packer",
+        "ssh_timeout": "2h",
         "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
+        "shutdown_timeout": "15m",
         "disk_size": "{{user `disk_size`}}",
+        "ram_size": "{{user `memory_size`}}",
+        "cpu": "{{user `cpus`}}",
+        "switch_name": "{{user `switch_name`}}",
+        "temp_path": "{{user `temp_path`}}",
         "floppy_files": [
           "{{user `autounattend`}}",
           "./scripts/fixnetwork.ps1",
@@ -23,14 +29,26 @@
     "provisioners": [
       {
         "type": "shell",
-        "remote_path": "/tmp/script.bat",
-        "execute_command": "{{.Vars}} cmd /c C:/Windows/Temp/script.bat",
+        "remote_path": "C:/Windows/Temp/script.bat",
+        "execute_command": "{{.Vars}} cmd /c {{.Path}}",
         "scripts": [    
           "./scripts/disable-auto-logon.bat",
           "./scripts/enable-rdp.bat",
           "./scripts/compile-dotnet-assemblies.bat",
           "./scripts/compact.bat",
-          "./scripts/installers.bat",
+          "./scripts/installers.bat"
+          ]
+      },
+      {
+        "type": "shell",
+        "remote_path": "C:/Windows/Temp/script.sh",
+        "execute_command": "{{.Vars}} cmd /c {{.Path}} %V8VERSION% ones/%V8VERSION%",
+        "environment_vars": [
+          "V8VERSION={{user `V8VERSION`}}",
+          "V8USER={{user `V8USER`}}",
+          "V8PASSW={{user `V8PASSW`}}"
+        ],
+        "scripts": [    
           "./scripts/onesdownloader.sh"
         ]
       }
@@ -44,8 +62,10 @@
       "iso_checksum": "56ab095075be28a90bc0b510835280975c6bb2ce",
       "autounattend": "./answer_files/10/Autounattend.xml",
       "headless": "true",
-      "cpus": "2",
+      "cpus": "4",
       "memory_size": "2048",
-      "disk_size": "61440"
+      "disk_size": "61440",
+      "switch_name": "Коммутатор по умолчанию",
+      "temp_path": "D:/Путь/К/Папке/Где/Есть/Место/Желательно/На/SSD"
     }
   }
